@@ -1,0 +1,31 @@
+Create partition with fdisk:
+(replace sdc1 with the name of your microSD card  with number (you can find it with fdisk -l))
+sudo umount /dev/sdc1
+
+(replace sdc with the name of your microSD card but now in the following without number (you can find it with fdisk -l))
+sudo fdisk /dev/sdc
+d
+w
+sudo fdisk /dev/sdc
+o
+w
+sudo fdisk /dev/sdc
+n
+Enter
+Enter
+First sector (2048-62333951, default 2048): 32768
+Enter
+w
+sudo mkfs.ext4 /dev/sdc1 (with number!)
+
+sudo fdisk /dev/sdc
+p (at Boot must be a "*" when not press "a" and then "w")
+w
+End of fdisk instructions.
+
+Flash U-Boot to microSD card with following commands (you can find the name of your microSD card with e.g.
+gparted, we search for example /dev/sdc (without number! not /dev/sdc1)):
+sudo dd if=./idbloader.img of=/dev/sdc seek=64
+sudo dd if=./u-boot.itb of=/dev/sdc seek=16384
+
+

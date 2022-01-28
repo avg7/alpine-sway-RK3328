@@ -1,0 +1,74 @@
+If the source (www.avg7.de/forum/sicheres-alpine-linux-betriebs-system-usb-stick-speicherkarte) is named, the following content may be reproduced, redistributed and used commercially in any form and also modified, free of charge. This applies irrevocably and always.
+
+Password for the users "admin" and "inet": 123456789
+
+Flash U-boot to microSD card, then if you want to use the ROC-RK3328-CC "RENEGADE" board, copy the file "localhost.apkovl.tar.gz" from the folder "ROC-RK3328-CC-RENEGADE/SWAY" to your microSD card. If you want to use the ROCK64 board then copy the file "localhost.apkovl.tar.gz" from the folder "ROCK64/SWAY" to your microSD card. Copy now the folders "apks", "boot", "cache" and "SHARE" and the file "README" to your microSD card. If you want to use the rock64 board change the line "FDT /boot/dtbs/rk3328-roc-cc.dtb" in the file "/boot/extlinux/extlinux.conf" to "/boot/dtbs/rk3328-rock64.dtb".
+
+If the ROCK64 board doesn't start, restart the ROCK64 board by pressing the button on the side of the board until it works. 
+
+Always after you start Alpine Linux:
+To make sure that all programs have been installed run the following command (for ROCK64 replace "mmcblk1p1 with "mmcblk0p1"):
+sudo apk add /media/mmcblk1p1/cache/*.apk
+
+The script "/etc/files/startscript.sh" runs automatically at boot (see "/etc/local.d/boot.start").
+After you login control the checksums from this file (displayed after you login with the user "admin"):
+localhost.apkovl.tar.gz
+
+Control also the number of files which are on your microSD card (displayed after you login with the user "admin").
+
+Now you can remove the microSD card with Alpine Linux (Important: Then you can not run "lbu commit")
+
+Before you start Sway with the command "sway" read "/etc/sway/config" and important: You must run the following command: "/usr/bin/sudo /bin/chmod +s /bin/su".
+
+Set time and date with the commands:
+sudo date --set YYYY-MM-DD
+sudo date --set HH:MM:SS 
+
+After you start sway you should open a terminal and run: sudo chmod -s /usr/bin/sway
+You should also find out if sway is running as root: For example run the command "top" and search a process with the name "sway", which is running as "root" (the process is running as root if in the field "user" you can see "root"). Then run the following command (replace pid with the process ID): kill pid   
+
+If you want monitoring the logfiles "/var/log/messages" (with logwatch) and "/var/log/audit/audit.log" (with aureport) and processes (with ps) and see the audit system and service status, open terminal and run:
+sudo sh /etc/files/log.sh
+
+You can run "sudo rm -rf /etc/apk/cache" and you can remove the user "admin" from "/etc/sudoers" with the command "sudo sed -i '/admin/d' /etc/sudoers" (or run: sudo sh /etc/files/noroot.sh) (Important: Then nobody can use sudo and there are no programs that you can save with "lbu commit", you should not use "lbu commit" in this session)
+
+If you want to disable xwayland for all programs, insert the line "xwayland disable" into "/etc/sway/config" 
+
+If you want to save all files in the user folders (microSD card with Alpine Linux must be in your board), run:
+sudo cp -rp /home/* /etc/home/
+sudo lbu commit
+
+If you want to mount usb storage devices you can install udisks2 or you edit the file "/etc/fstab" (Important: You must run always after you start Alpine Linux at first "/usr/bin/sudo /bin/chmod +s /bin/su"):
+ 
+For udisks2 you must enable dbus, run: sudo rc-update add dbus
+Then restart the pc.
+
+How to edit "/etc/fstab" to mount usb storage devices without sudo:
+Find the name of the usb storage device:
+sudo fdisk -l
+Run (replace "account" with your username and "usb" with the name of the usb storage device):
+mkdir /home/account/usb
+
+Insert in "/etc/fstab" this line (replace "account" with the name of your userfolder and "usb" with the name of the usb storage device):
+/dev/usb /home/account/usb auto noauto,nosuid,nodev,noexec,user 0 0
+
+Run:
+sudo visudo
+Then insert this line (replace "account" with your username and "usb" with the name of the usb storage device):
+account ALL=(ALL) NOPASSWD: /bin/umount /home/account/usb
+Now you can mount the usb storage device with:
+mount usb
+To unmount:
+sudo umount /home/account/usb
+
+To allow users to run the command "poweroff" insert the following line after you run the command "sudo visudo" (all users must be in the group input):
+%input ALL=(ALL) /sbin/poweroff
+
+Recommendations for Firefox etc.: 
+www.kuketz-blog.de/firefox-ein-browser-fuer-datenschutzbewusste-firefox-kompendium-teil1
+www.wiki.kairaven.de
+www.privacy-handbuch.de
+
+You can contact us (Website: avg7.de) if you need a Chaoskey, Nitrokey or other Open-Source-Hardware:
+https://www.nitrokey.com/news/2015/how-nitrokeys-firmware-protected-against-badusb-and-nsa
+https://altusmetrum.org/ChaosKey

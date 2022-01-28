@@ -1,0 +1,25 @@
+{
+  "description": "New",
+
+  "zone": {
+    "inet": { 
+	 "iface": [
+	     "eth0", 
+    	     "wlan0"
+         ]
+     }
+  },  
+  
+  "policy": [
+    { "action": "drop" }
+  ],
+
+  "filter": [
+    {
+      "in":"_fw",
+      "out": "inet",
+      "service": ["http", "https", "ntp", "imaps", "pop3s"],
+      "action": "accept"
+    }
+  ]
+} 

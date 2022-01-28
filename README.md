@@ -1,0 +1,1 @@
+If the source (www.avg7.de/forum/sicheres-alpine-linux-betriebs-system-usb-stick-speicherkarte) is named, the contents of "https://github.com/avg7/alpine/" may be reproduced, redistributed and used commercially in any form and also modified, free of charge. This applies irrevocably and always.
